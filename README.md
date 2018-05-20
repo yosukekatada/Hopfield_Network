@@ -21,15 +21,15 @@ The network can strip off the sunglasses because the network remembers the forme
 
 
 # Instructions #
-##Input files##
+## Input files
 JPEG files like those in "train_pics".
 Network learns those pics as correct pics.
 If you want to add new pics, please put them in "train_pics" folder.
 
-##Test files##
+## Test files
 The pictures with sunglasses should be in "test_pics" folder. 
 
-##How to run the code##
+## How to run the code
 Prior to running my code, please install the following libraries.
 - numpy
 - random
@@ -45,7 +45,7 @@ Also, Here is the way to run my code.
 - current_path should be current working folder path (usual way is os.getcwd())
 
 After you download all the files in this repository, please run "hopfield.py". Here is the main code.
-```
+```python
 #First, you can create a list of input file path
 current_path = os.getcwd()
 train_paths = []
