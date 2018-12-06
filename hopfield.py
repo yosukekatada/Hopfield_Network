@@ -1,160 +1,96 @@
-import os
 import random
 
 import numpy as np
 
-from PIL import Image
 
+class Hopfield(object):
 
-def readImg2array(file, size, threshold=145):
-    """Read Image file and convert it to Numpy array.
+    def create_W(self, x):
+        """Create Weight matrix for a single image
 
-    Arguments:
-        file {str} -- image local file path
-        size {tuple} -- resize image size
+        Arguments:
+            x {np.ndarray} -- vector
 
-    Keyword Arguments:
-        threshold {int} -- binary threshold (default: {145})
+        Returns:
+            np.ndarray -- the weight of input(x)
+        """
+        # TODO: spend too time to do loop, anyway.
 
-    Returns:
-        np.ndarray -- image matrix
-    """
+        assert len(x.shape) == 1, "The input is not vector"
 
-    # read image file and convert it to gray
-    img = Image.open(file).convert(mode="L")
-    img = img.resize(size)  # resize image
+        length = len(x)
+        w = np.zeros((length, length))
+        for i in range(length):
+            for j in range(i, length):
+                if i != j:
+                    w[i, j] = x[i]*x[j]
+                    w[j, i] = w[i, j]
+        return w
 
-    # binarize image array
-    imgArray = np.asarray(img)
-    mat = np.zeros(img.size)
+    def update(self, y, theta=0.5, epochs=100):
+        """Update test sample.
 
-    mat[imgArray > threshold] = 1
-    mat[imgArray <= threshold] = -1
+        Arguments:
+            y {np.ndarray} -- vector
 
-    return mat
+        Keyword Arguments:
+            theta {float} -- (default: {0.5})
+            epochs {int} -- (default: {100})
 
+        Returns:
+            np.ndarray -- recoveried sample
+        """
 
-def array2img(data, outFile=None):
-    """Convert Numpy array to Image file like '*.jpg'.
+        length = len(y)
+        for _ in range(epochs):
+            ind = random.randint(0, length-1)
+            u = np.dot(self.w[ind], y) - theta
+            if u > 0:
+                y[ind] = 1
+            elif u < 0:
+                y[ind] = -1
 
-    Arguments:
-        data {np.ndarray} -- 1 or -1 matrix
+        return y
 
-    Keyword Arguments:
-        outFile {str} -- output file path (default: {None})
+    def train(self, data):
+        """Training pipeline.
 
-    Returns:
-        Image.image -- imgage
-    """
+        Arguments:
+            data {list} -- each sample is vector
+        """
 
-    mat = np.zeros(data.shape, dtype=np.uint8)
-    mat[data == 1] = 255
-    mat[data == -1] = 0
-    img = Image.fromarray(mat)
-    if outFile is not None:
-        img.save(outFile)
+        print("Loading images and creating weight matrix....")
+        counter = 0  # the number of data
+        for x in data:
+            if counter == 0:
+                self.w = self.create_W(x)
+            else:
+                tmp_w = self.create_W(x)
+                self.w = self.w + tmp_w
+            counter += 1
 
-    return img
+        print("Weight matrix is done!")
 
+    def predict(self, data, epochs=1000, theta=0.5):
+        """Predicting pipline.
 
-def create_W(x):
-    """Create Weight matrix for a single image
+        Arguments:
+            data {list} -- each sample is vector
 
-    Arguments:
-        x {np.ndarray} -- vector
+        Keyword Arguments:
+            epochs {int} -- the max iteration of loop (default: {1000})
+            theta {float} -- parameter for updating test date (default: {0.5})
 
-    Returns:
-        np.ndarray -- the weight of input(x)
-    """
-    # TODO: spend too time to do loop, anyway.
-    assert len(x.shape) == 1, "The input is not vector"
+        Returns:
+            list -- recoveried by hopfield data 
+        """
 
-    length = len(x)
-    w = np.zeros((length, length))
-    for i in range(length):
-        for j in range(i, length):
-            if i != j:
-                w[i, j] = x[i]*x[j]
-                w[j, i] = w[i, j]
-    return w
+        counter = 0
+        recovery = []
+        for y in data:
+            counter += 1
+            recovery.append(self.update(y=y, theta=theta, epochs=epochs))
 
+            print("The {}th sample is updating...".format(counter))
 
-def update(w, y_vec, theta=0.5, epochs=100):
-    length = len(y_vec)
-    for _ in range(epochs):
-        ind = random.randint(0, length-1)
-        u = np.dot(w[ind], y_vec) - theta
-        if u > 0:
-            y_vec[ind] = 1
-        elif u < 0:
-            y_vec[ind] = -1
-
-    return y_vec
-
-
-def hopfield(train_files, test_files, theta=0.5, time=1000, size=(100, 100), threshold=60, cwd_path=None):
-    """Training pipeline.
-
-    Arguments:
-        train_files {list} -- train data path list
-        test_files {list} -- test data path list
-
-    Keyword Arguments:
-        theta {float} -- [description] (default: {0.5})
-        time {int} -- [description] (default: {1000})
-        size {tuple} -- [description] (default: {(100, 100)})
-        threshold {int} -- [description] (default: {60})
-        cwd_path {[type]} -- [description] (default: {None})
-    """
-
-    print("Loading images and creating weight matrix....")
-
-    # TODO: split read images and create weight
-    counter = 0  # num_files is the number of files
-    for path in train_files:
-        x = readImg2array(file=path, size=size, threshold=threshold)
-        x_vec = x.flatten()
-        if counter == 0:
-            w = create_W(x_vec)
-        else:
-            tmp_w = create_W(x_vec)
-            w = w + tmp_w
-        counter += 1
-
-    print("Weight matrix is done!")
-
-    print("Imported test data.")
-    print("Updating...")
-    # TODO: split read images and create weight
-    counter = 0
-    for path in test_files:
-        y = readImg2array(file=path, size=size, threshold=threshold)
-        y_vec = y.flatten()
-        y_vec_after = update(w=w, y_vec=y_vec, theta=theta, epochs=time)
-        y_vec_after = y_vec_after.reshape(y.shape)
-        if cwd_path is not None:
-            outfile = os.path.join(cwd_path, 'recovery_'+str(counter)+".jpg")
-            array2img(y_vec_after, outFile=outfile)
-        counter += 1
-
-
-if __name__ == "__main__":
-    cwd_path = os.getcwd()
-
-    # TODO: build hopfield class
-
-    # First, you can create a list of input file path
-    train_path = os.path.join(cwd_path, 'data/train_pics')
-    train_paths = [os.path.join(train_path, p) for p in os.listdir(train_path)]
-
-    # Second, you can create a list of sungallses file path
-    test_path = os.path.join(cwd_path, 'data/test_pics')
-    test_paths = [os.path.join(test_path, p) for p in os.listdir(test_path)]
-
-    # Hopfield network starts!
-    hopfield(
-        train_files=train_paths,
-        test_files=test_paths,
-        theta=0.5, time=20000, size=(100, 100),
-        threshold=60, cwd_path=cwd_path
-    )
+        return recovery
