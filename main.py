@@ -15,7 +15,7 @@ size = (100, 100)
 train_path = os.path.join(cwd_path, 'data/train_pics')
 train_data = utils.preprocess(train_path, size, threshold)
 
-# create a list of tese data, e.g. yosukekatada 's sunglasse picture.
+# create a list of tese data, e.g. yosukekatada 's sunglasses picture.
 test_path = os.path.join(cwd_path, 'data/test_pics')
 test_data = utils.preprocess(test_path, size, threshold)
 

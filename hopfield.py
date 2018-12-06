@@ -34,8 +34,8 @@ class Hopfield(object):
             y {np.ndarray} -- vector
 
         Keyword Arguments:
-            theta {float} -- (default: {0.5})
-            epochs {int} -- (default: {100})
+            theta {float} -- the threshold of the neuron activation(default: {0.5})
+            epochs {int} -- the max iteration of loop(default: {100})
 
         Returns:
             np.ndarray -- recoveried sample
@@ -79,7 +79,7 @@ class Hopfield(object):
 
         Keyword Arguments:
             epochs {int} -- the max iteration of loop (default: {1000})
-            theta {float} -- parameter for updating test date (default: {0.5})
+            theta {float} -- the threshold of the neuron activation (default: {0.5})
 
         Returns:
             list -- recoveried by hopfield data 
