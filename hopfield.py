@@ -144,11 +144,11 @@ if __name__ == "__main__":
     # TODO: build hopfield class
 
     # First, you can create a list of input file path
-    train_path = os.path.join(cwd_path, 'train_pics')
+    train_path = os.path.join(cwd_path, 'data/train_pics')
     train_paths = [os.path.join(train_path, p) for p in os.listdir(train_path)]
 
     # Second, you can create a list of sungallses file path
-    test_path = os.path.join(cwd_path, 'test_pics')
+    test_path = os.path.join(cwd_path, 'data/test_pics')
     test_paths = [os.path.join(test_path, p) for p in os.listdir(test_path)]
 
     # Hopfield network starts!
