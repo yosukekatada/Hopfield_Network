@@ -21,15 +21,13 @@ test_data = utils.preprocess(test_path, size, threshold)
 
 
 # build network
-network = Hopfield.Hopfield()
+network = Hopfield.Hopfield(isload=True)
 network.train(train_data)  # start training
 recovery = network.predict(test_data, epochs=epochs)  # start testing
 
 # recovery image
-counter = 0
-for img in recovery:
+for counter, img in enumerate(recovery):
     img_after = img.reshape(size)
     filename = "recovery_{}.jpg".format(counter)
     outfile = os.path.join(cwd_path, filename)
     utils.array2img(img_after, outFile=outfile)
-    counter += 1
