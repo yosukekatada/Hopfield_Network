@@ -1,2 +1,6 @@
 # python histroy codes
 .history/
+
+
+# python cache
+__pycache__/
