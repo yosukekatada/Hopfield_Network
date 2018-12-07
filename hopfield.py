@@ -39,6 +39,22 @@ class Hopfield(object):
 
         return y
 
+    def create_W(self, data):
+        """Create network weight.
+
+        Arguments:
+            data {list} -- each sample is vector.
+
+        Returns:
+            np.ndarray -- matrix
+        """
+
+        mat = np.vstack(data)
+        eye = len(data) * np.identity(np.size(mat, 1))
+        weight = np.dot(mat.T, mat) - eye
+
+        return weight
+
     def train(self, data, save=True):
         """Training pipeline.
 
@@ -51,9 +67,8 @@ class Hopfield(object):
 
         if self.weight is None:
             print("Creating weight matrix....")
-            mat = np.vstack(data)
-            eye = len(data) * np.identity(np.size(mat, 1))
-            self.weight = np.dot(mat.T, mat) - eye
+            self.weight = self.create_W(data)
+            print("Weight matrix is done!")
 
             if save:
                 np.save('weight.npy', self.weight)

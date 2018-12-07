@@ -8,3 +8,6 @@ __pycache__/
 
 # model
 weight.npy
+
+
+data/
