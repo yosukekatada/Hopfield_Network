@@ -13,5 +13,21 @@ weight.npy
 # data
 examples/data/
 
+# C extensions
+*.so
 
-build/
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+MANIFEST

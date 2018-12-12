@@ -3,11 +3,16 @@ import random
 
 import numpy as np
 
+"""
+    Discrete Hopfield Network (DHNN) implemented with Python.
+"""
+
 
 class DHNN(object):
 
-    def __init__(self, isload=False, wpath='weight.npy'):
+    def __init__(self, isload=False, wpath='weigh.npy'):
 
+        self.wpath = wpath
         if isload and os.path.isfile(wpath):
             print("Loading weight matrix....")
             self.weight = np.load(wpath)
@@ -71,7 +76,7 @@ class DHNN(object):
             print("Weight matrix is done!")
 
             if save:
-                np.save('weight.npy', self.weight)
+                np.save(self.wpath, self.weight)
 
     def predict(self, data, epochs=1000, theta=0.5):
         """Predicting pipline.
