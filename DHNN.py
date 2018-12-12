@@ -4,7 +4,7 @@ import random
 import numpy as np
 
 
-class Hopfield(object):
+class DHNN(object):
 
     def __init__(self, isload=False, wpath='weight.npy'):
 

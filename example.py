@@ -1,13 +1,13 @@
 import os
 
-import Hopfield
+import DHNN
 import utils
 
 # paramters
 cwd_path = os.getcwd()
 theta = 0.5
 threshold = 60
-epochs = 20000
+epochs = 50000
 size = (100, 100)
 
 
@@ -21,7 +21,7 @@ test_data = utils.preprocess(test_path, size, threshold)
 
 
 # build network
-network = Hopfield.Hopfield(isload=True)
+network = DHNN.DHNN(isload=False)
 network.train(train_data)  # start training
 recovery = network.predict(test_data, epochs=epochs)  # start testing
 
