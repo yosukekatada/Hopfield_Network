@@ -1,16 +1,16 @@
 import os
 
-import DHNN
+import dhnn
 import utils
 
 # paramters
-cwd_path = os.getcwd()
+cwd_path = os.path.split(os.path.abspath(__file__))[0]
 theta = 0.5
 threshold = 60
 epochs = 50000
 size = (100, 100)
 
-
+print(cwd_path)
 # create a list of train data.
 train_path = os.path.join(cwd_path, 'data/train_pics')
 train_data = utils.preprocess(train_path, size, threshold)
@@ -21,7 +21,7 @@ test_data = utils.preprocess(test_path, size, threshold)
 
 
 # build network
-network = DHNN.DHNN(isload=False)
+network = dhnn.DHNN()
 network.train(train_data)  # start training
 recovery = network.predict(test_data, epochs=epochs)  # start testing
 
