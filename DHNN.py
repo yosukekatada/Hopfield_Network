@@ -11,6 +11,12 @@ import numpy as np
 class DHNN(object):
 
     def __init__(self, isload=False, wpath='weigh.npy'):
+        """Initializes DHNN.
+
+        Keyword Arguments:
+            isload {bool} -- is load local weight (default: {False})
+            wpath {str} -- the local weight path (default: {'weigh.npy'})
+        """
 
         self.wpath = wpath
         if isload and os.path.isfile(wpath):
