@@ -4,10 +4,14 @@
 
 # python cache
 __pycache__/
-
+examples/__pycache__/
 
 # model
 weight.npy
 
 
-data/
+# data
+examples/data/
+
+
+build/
